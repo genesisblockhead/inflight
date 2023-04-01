@@ -5,7 +5,16 @@ var View = {};
 
 var Point = {};
 
-var Path = {};
+function Make(R) {
+  return {};
+}
+
+var Rectangle = {};
+
+var Path = {
+  Make: Make,
+  Rectangle: Rectangle
+};
 
 export {
   View ,

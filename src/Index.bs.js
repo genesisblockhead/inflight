@@ -26,6 +26,11 @@ window.onload = (function (param) {
     var start = new Paper.Point(100, 100);
     path.moveTo(start);
     path.lineTo(start.add(new Paper.Point(200, -50)));
+    console.log(path);
+    var a = new Paper.Point(200, 200);
+    var b = new Paper.Point(300, 250);
+    var rectangle = new (Paper.Path.Rectangle)(a, b);
+    rectangle.strokeColor = "red";
   });
 
 var e = document.querySelector("#root");
