@@ -2,13 +2,16 @@
 
 import * as React from "react";
 
+var $$Window = {};
+
 function App(props) {
-  return React.createElement("div", undefined, "Hello webpack");
+  return React.createElement("canvas", undefined);
 }
 
 var make = App;
 
 export {
+  $$Window ,
   make ,
 }
 /* react Not a pure module */
