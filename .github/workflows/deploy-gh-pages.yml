@@ -1,15 +1,12 @@
-name: CI
+name: Build site and deploy to Github Pages
 
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
   workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     concurrency: ci-${{ github.ref }}
     steps:
@@ -22,7 +19,20 @@ jobs:
           npm run res:build
           npm run build:prod
 
-      - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@v4
+      - name: Upload
+        uses: actions:upload-pages-artifact@v1
         with:
-          folder: dist
+          path: dist
+  deploy:
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
