@@ -1,5 +1,7 @@
 @val external window: App.Window.t = "window"
 
+%%raw("import './main.css'")
+
 exception CanvasNotFound
 
 App.Window.onload(window, () => {

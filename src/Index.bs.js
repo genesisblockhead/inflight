@@ -6,6 +6,9 @@ import * as React from "react";
 import * as Caml_exceptions from "rescript/lib/es6/caml_exceptions.js";
 import * as Client from "react-dom/client";
 
+import './main.css'
+;
+
 var CanvasNotFound = /* @__PURE__ */Caml_exceptions.create("Index.CanvasNotFound");
 
 window.onload = (function (param) {
