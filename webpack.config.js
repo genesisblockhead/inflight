@@ -3,6 +3,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const isProduction = process.env.NODE_ENV == 'production';
 
@@ -25,6 +26,14 @@ const config = {
       title: 'Custom template',
       template: 'index.html',
     }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'src/assets', to: 'assets' }
+      ],
+      options: {
+        concurrency: 100
+      }
+    })
   ],
   module: {
     rules: [
@@ -36,11 +45,6 @@ const config = {
         test: /\.css$/i,
         use: [stylesHandler,'css-loader'],
       },
-      {
-        test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
-        type: 'asset',
-      },
-
       // Add your rules for custom modules here
       // Learn more about loaders from https://webpack.js.org/loaders/
     ],

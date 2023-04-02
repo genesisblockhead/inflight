@@ -3,25 +3,34 @@
 %%raw("import './main.css'")
 
 exception CanvasNotFound
+exception BodyNotFound
 
 App.Window.onload(window, () => {
-  Js.log("hello")
-  switch ReactDOM.querySelector("#canvas") {
-  | Some(canvas) => {
-      Paper.setup(canvas)
-      let path = Paper.Path.make()
-      Paper.Path.setStrokeColor(path, "black")
-      let start = Paper.Point.make(100., 100.)
-      Paper.Path.moveTo(path, start)
-      Paper.Path.lineTo(path, Paper.Point.add(start, Paper.Point.make(200., -50.)))
-      Js.log(path)
+  switch ReactDOM.querySelector("body") {
+  | Some(body) => {
+      let app = Pixi.Application.make()
+      let view = app->Pixi.Application.view
+      Pixi.View.appendChild(body, view)
 
-      let a = Paper.Point.make(200., 200.)
-      let b = Paper.Point.make(300., 250.)
-      let rectangle = Paper.Path.Rectangle.make(a, b)
-      Paper.Path.Rectangle.setStrokeColor(rectangle, "red")
+      (
+        async () => {
+          let texture = await Pixi.Assets.load("assets/bunny.png")
+          let bunny = Pixi.Sprite.make(texture)
+          app->Pixi.Application.stage->Pixi.Stage.addChildSprite(bunny)
+          let renderer = Pixi.Application.renderer(app)
+          Pixi.Sprite.setX(bunny, Pixi.Renderer.getWidth(renderer) /. 2.0)
+
+          let elapsed = ref(0.0)
+          app
+          ->Pixi.Application.ticker
+          ->Pixi.Ticker.add(delta => {
+            elapsed := elapsed.contents +. delta
+            Pixi.Sprite.setX(bunny, 100.0 +. Js.Math.cos(elapsed.contents /. 50.0) *. 100.0)
+          })
+        }
+      )() |> ignore
     }
-  | None => raise(CanvasNotFound)
+  | None => raise(BodyNotFound)
   }
 })
 
