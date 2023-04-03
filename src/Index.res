@@ -8,17 +8,31 @@ exception BodyNotFound
 App.Window.onload(window, () => {
   switch ReactDOM.querySelector("body") {
   | Some(body) => {
-      let app = Pixi.Application.make()
+      let options = Pixi.Application.Options.make(~backgroundColor=0x2980b9)
+      let app = Pixi.Application.make(~options, ())
       let view = app->Pixi.Application.view
       Pixi.View.appendChild(body, view)
 
       (
         async () => {
-          let texture = await Pixi.Assets.load("assets/bunny.png")
+          let container = Pixi.Container.make()
+          app->Pixi.Application.stage->Pixi.Container.addChildContainer(container)
+
+          let texture = await Pixi.Assets.load("assets/bunny2.png")
           let bunny = Pixi.Sprite.make(texture)
-          app->Pixi.Application.stage->Pixi.Stage.addChildSprite(bunny)
+          container->Pixi.Container.addChildSprite(bunny)
+
+          let numerals = await Pixi.Assets.load("assets/numerals.png")
+          let numerals = Pixi.Sprite.make(numerals)
+          numerals->Pixi.Sprite.setTint(0xb98029)
+          container->Pixi.Container.addChildSprite(numerals)
+
+          bunny->Pixi.Sprite.setEventMode(#static)
+          bunny->Pixi.Sprite.onclick(Js.log)
           let renderer = Pixi.Application.renderer(app)
           Pixi.Sprite.setX(bunny, Pixi.Renderer.getWidth(renderer) /. 2.0)
+          Pixi.Sprite.setX(numerals, Pixi.Renderer.getWidth(renderer) /. 2.0)
+          Pixi.Sprite.setY(numerals, Pixi.Renderer.getWidth(renderer) /. 2.0)
 
           let elapsed = ref(0.0)
           app

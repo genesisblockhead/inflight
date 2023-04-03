@@ -7,10 +7,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const isProduction = process.env.NODE_ENV == 'production';
 
-
 const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : 'style-loader';
-
-
 
 const config = {
   entry: './src/Index.bs.js',
@@ -23,7 +20,7 @@ const config = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'Custom template',
+      title: 'Inflight' + (isProduction ? '' : ' (dev)'),
       template: 'index.html',
     }),
     new CopyWebpackPlugin({
@@ -49,6 +46,7 @@ const config = {
       // Learn more about loaders from https://webpack.js.org/loaders/
     ],
   },
+  devtool: "source-map"
 };
 
 module.exports = () => {

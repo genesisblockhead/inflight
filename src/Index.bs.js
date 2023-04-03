@@ -21,15 +21,30 @@ window.onload = (function (param) {
             Error: new Error()
           };
     }
-    var app = new PixiJs.Application();
+    var options = {
+      backgroundColor: 2719929
+    };
+    var app = new PixiJs.Application(options);
     var view = app.view;
     body.appendChild(view);
     ((async function (param) {
-            var texture = await PixiJs.Assets.load("assets/bunny.png");
+            var container = new PixiJs.Container();
+            app.stage.addChild(container);
+            var texture = await PixiJs.Assets.load("assets/bunny2.png");
             var bunny = new PixiJs.Sprite(texture);
-            app.stage.addChild(bunny);
+            container.addChild(bunny);
+            var numerals = await PixiJs.Assets.load("assets/numerals.png");
+            var numerals$1 = new PixiJs.Sprite(numerals);
+            numerals$1.tint = 12156969;
+            container.addChild(numerals$1);
+            bunny.eventMode = "static";
+            bunny.onclick = (function (prim) {
+                console.log(prim);
+              });
             var renderer = app.renderer;
             bunny.x = renderer.width / 2.0;
+            numerals$1.x = renderer.width / 2.0;
+            numerals$1.y = renderer.width / 2.0;
             var elapsed = {
               contents: 0.0
             };
