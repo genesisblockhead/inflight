@@ -3,6 +3,8 @@
 import * as App from "./App.bs.js";
 import * as React from "react";
 import * as PixiJs from "pixi.js";
+import * as Js_option from "rescript/lib/es6/js_option.js";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as Caml_exceptions from "rescript/lib/es6/caml_exceptions.js";
 import * as Client from "react-dom/client";
 
@@ -13,6 +15,40 @@ var CanvasNotFound = /* @__PURE__ */Caml_exceptions.create("Index.CanvasNotFound
 
 var BodyNotFound = /* @__PURE__ */Caml_exceptions.create("Index.BodyNotFound");
 
+function make(fill, position, x, y, linestyle, radius, param) {
+  var g = new PixiJs.Graphics();
+  if (fill !== undefined) {
+    g.beginFill(fill);
+  }
+  var match;
+  if (position !== undefined) {
+    var position$1 = Caml_option.valFromOption(position);
+    match = [
+      position$1.x,
+      position$1.y
+    ];
+  } else {
+    match = [
+      Js_option.getWithDefault(0.0, x),
+      Js_option.getWithDefault(0.0, y)
+    ];
+  }
+  if (linestyle !== undefined) {
+    g.lineStyle(Caml_option.valFromOption(linestyle));
+  }
+  g.drawCircle(match[0], match[1], radius);
+  g.endFill();
+  return g;
+}
+
+var Circle = {
+  make: make
+};
+
+var Shape = {
+  Circle: Circle
+};
+
 window.onload = (function (param) {
     var body = document.querySelector("body");
     if (body == null) {
@@ -22,7 +58,7 @@ window.onload = (function (param) {
           };
     }
     var options = {
-      backgroundColor: 2719929
+      backgroundColor: "white"
     };
     var app = new PixiJs.Application(options);
     var view = app.view;
@@ -38,10 +74,24 @@ window.onload = (function (param) {
             numerals$1.tint = 12156969;
             container.addChild(numerals$1);
             bunny.eventMode = "static";
-            bunny.onclick = (function (prim) {
-                console.log(prim);
-              });
             var renderer = app.renderer;
+            bunny.onclick = (function ($$event) {
+                console.log($$event);
+                app.stage.removeChild(container);
+                container.destroy(undefined);
+                var container$1 = new PixiJs.Container();
+                var h = renderer.width;
+                var w = renderer.height;
+                var x = h * 0.75;
+                var y = w / 2.0;
+                var radius = 0.10 * Math.min(h, w);
+                var graphics = make("yellow", undefined, x, y, {
+                      width: 8,
+                      color: "black"
+                    }, radius, undefined);
+                app.stage.addChild(container$1);
+                container$1.addChild(graphics);
+              });
             bunny.x = renderer.width / 2.0;
             numerals$1.x = renderer.width / 2.0;
             numerals$1.y = renderer.width / 2.0;
@@ -66,5 +116,6 @@ if (e == null) {
 export {
   CanvasNotFound ,
   BodyNotFound ,
+  Shape ,
 }
 /*  Not a pure module */
